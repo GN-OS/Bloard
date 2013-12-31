@@ -3,7 +3,7 @@ Name: Bloard
 Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
-Maintainer: GN-OS
+Description: Tired of white keyboards in iOS 7? Install Bloard! Bloard while turn your white keyboard into a black keyboard.
+Maintainer: Nexuist <techboy6601@gmail.com>
 Author: GN-OS
 Section: Tweaks
