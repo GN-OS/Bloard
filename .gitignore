@@ -1,0 +1,8 @@
+#Theos
+.DS_Store
+_
+obj
+BCPreferences/obj
+*.deb
+
+.theos/

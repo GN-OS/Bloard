@@ -1,0 +1,9 @@
+Package: com.gnos.bloard
+Name: Bloard
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: GN-OS
+Author: GN-OS
+Section: Tweaks
