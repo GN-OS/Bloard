@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#import <UIKit/UITextInputTraits.h>
 
 %hook UITextInputTraits
 
