@@ -4,67 +4,47 @@
 
 @interface GNBloardPreferences : NSObject
 
-+ (id)sharedInstance;
-
 - (void)createDefaultPreferences;
-- (BOOL)keyIsEnabled;
+- (BOOL)isEnabled;
+
+@end
+
+@implementation GNBloardPreferences
+
+- (void)createDefaultPreferences {
+    NSDictionary *d = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
+    [d writeToFile:ENABLED atomically:YES];
+    [d release];
+}
+
+- (BOOL)isEnabled {
+    NSDictionary *prefs = nil;
+    prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED]; // Load the plist
+    //Is ENABLED not existent?
+    if (prefs == nil) { // create new plist
+        [self createDefaultPreferences];
+        // Load the plist again
+        prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED];
+    }
+    BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
+    [prefs release];
+    return value;
+}
 
 @end
 
 %hook UITextInputTraits
 
 - (int) keyboardAppearance {
-    
-    BOOL enabledBool =  [[GNBloardPreferences sharedInstance] keyIsEnabled];
-    
-    if (enabledBool) {
-        
+    GNBloardPreferences *prefs =  [[GNBloardPreferences alloc] init];
+    if ([prefs isEnabled]) {
+        [prefs release];
         return 1;
-        
     } else {
-        
+        [prefs release];
         return %orig;
     }
     
 }
 
 %end
-
-@implementation GNBloardPreferences
-
-+ (id)sharedInstance {
-    static id sharedInstance = nil;
-    
-    if (sharedInstance == nil) {
-        sharedInstance = [[GNBloardPreferences alloc] init];
-    }
-    
-    return sharedInstance;
-}
-
-- (void)createDefaultPreferences {
-    
-    NSDictionary *d = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
-    
-    [d writeToFile:ENABLED atomically:YES];
-    [d release];
-}
-
-- (BOOL)keyIsEnabled {
-    
-    NSDictionary *prefs = nil;
-    prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED]; // Load the plist
-    //Is ENABLED not existent?
-    if (prefs == nil) { // create new plist
-        [[GNBloardPreferences sharedInstance] createDefaultPreferences];
-        // Load the plist again
-        prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED];
-    }
-    
-    BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
-    [prefs release];
-    
-    return value;
-}
-
-@end
