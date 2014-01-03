@@ -1,4 +1,4 @@
-#define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloard.enabled.plist"
+#define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloardpreferences.plist"
 
 #import <UIKit/UITextInputTraits.h>
 
@@ -36,13 +36,8 @@
 		prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED];
 	}
 
-	BOOL r = NO;
-	NSNumber *num = (NSNumber *)[prefs objectForKey:key];
-	if (num != nil) {
-		r = [num boolValue];
-	}
-
+	BOOL *value = [[prefs objectForKey:key] boolValue];
 	[prefs release];
 
-	return r;
+	return value;
 }
