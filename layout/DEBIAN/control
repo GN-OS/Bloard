@@ -3,7 +3,7 @@ Name: Bloard
 Depends: mobilesubstrate, preferenceloader, firmware(>=7.0)
 Version: 0.0.2
 Architecture: iphoneos-arm
-Description: Tired of white keyboards in iOS 7? Install Bloard! Bloard while turn your white keyboard into a nice light black keyboard.
-Maintainer: Nexuist <techboy6601@gmail.com>
+Description: Universal dark keyboard for iOS 7. Enable/disable in settings.
+Maintainer: Nexuist <nexuister@gmail.com>
 Author: GN-OS
 Section: Tweaks
