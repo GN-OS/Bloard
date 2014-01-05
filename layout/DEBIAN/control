@@ -1,7 +1,7 @@
 Package: com.gnos.bloard
 Name: Bloard
 Depends: mobilesubstrate, preferenceloader, firmware(>=7.0)
-Version: 0.0.1
+Version: 0.0.2
 Architecture: iphoneos-arm
 Description: Tired of white keyboards in iOS 7? Install Bloard! Bloard while turn your white keyboard into a nice light black keyboard.
 Maintainer: Nexuist <techboy6601@gmail.com>

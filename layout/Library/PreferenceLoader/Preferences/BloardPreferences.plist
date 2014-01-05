@@ -15,10 +15,6 @@
 	<array>
 		<dict>
 			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
 			<true/>
@@ -28,6 +24,58 @@
 			<string>enabled</string>
 			<key>label</key>
 			<string>Enabled</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Color</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.gnos.bloard.color</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>color</string>
+			<key>label</key>
+			<string>Keyboard Color</string>
+			<key>validTitles</key>
+			<array>
+				<string>Black</string>
+				<string>Dark gray</string>
+				<string>Light gray</string>
+				<string>White</string>
+				<string>Gray</string>
+				<string>Red</string>
+				<string>Green</string>
+				<string>Blue</string>
+				<string>Cyan</string>
+				<string>Yellow</string>
+				<string>Magenta</string>
+				<string>Orange</string>
+				<string>Purple</string>
+				<string>Brown</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<string>Black</string>
+				<string>Dark gray</string>
+				<string>Light gray</string>
+				<string>White</string>
+				<string>Gray</string>
+				<string>Red</string>
+				<string>Green</string>
+				<string>Blue</string>
+				<string>Cyan</string>
+				<string>Yellow</string>
+				<string>Magenta</string>
+				<string>Orange</string>
+				<string>Purple</string>
+				<string>Brown</string>
+			</array>
 		</dict>
 		<dict>
 			<key>cell</key>
