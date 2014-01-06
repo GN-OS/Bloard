@@ -1,4 +1,4 @@
 Bloard
 ======
 
-Black Keyboard tweak for iOS 7. Tired of all thos pesky white keyboards in iOS 7? Install Bloard.
+Universal black keyboard for iOS 7. Enable/disable in settings.
