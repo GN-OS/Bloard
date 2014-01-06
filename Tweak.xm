@@ -1,7 +1,6 @@
 #define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloard.enabled.plist"
-#define COLOR @"/var/mobile/Library/Preferences/com.gnos.bloard.color.plist"
 
-#import <UIKit/UITextInputTraits.h>
+#import <UIKit/UIKBRenderConfig.h>
 
 @interface GNBloard : NSObject
 - (void)createDefaultPreferences;
