@@ -40,7 +40,7 @@
     GNBloard *prefs =  [[GNBloard alloc] init];
     if ([prefs isEnabled]) {
         [prefs release];
-        return 1;
+        return NO;
     } 
     else {
         [prefs release];
