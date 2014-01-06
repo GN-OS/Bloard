@@ -1,6 +1,6 @@
 #define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloard.enabled.plist"
 
-#import <UIKit/UIKBRenderConfig.h>
+#import "UIKBRenderConfig.h"
 
 @interface GNBloard : NSObject
 - (void)createDefaultPreferences;
