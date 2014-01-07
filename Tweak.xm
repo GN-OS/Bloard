@@ -1,6 +1,5 @@
 #define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloard.enabled.plist"
 
-#import <UIKit/UIKBRenderConfig.h>
 
 @interface GNBloard : NSObject
 - (void)createDefaultPreferences;
@@ -31,6 +30,7 @@
     return value;
 }
 
+
 @end
 
 
@@ -41,11 +41,28 @@
     if ([prefs isEnabled]) {
         [prefs release];
         return NO;
-    } 
-    else {
+    
+    } else {
         [prefs release];
          return %orig;
     }
 }
 
 %end
+
+%hook UITextInputTraits
+
+- (int)keyboardAppearance {
+    GNBloard *prefs =  [[GNBloard alloc] init];
+    if ([prefs isEnabled]) {
+        [prefs release];
+        return 1;
+        
+    } else {
+        [prefs release];
+        return %orig;
+    }
+}
+
+%end
+
