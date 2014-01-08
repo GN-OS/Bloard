@@ -5,6 +5,6 @@
 		detail = "BloardPreferencesListController";
 		icon = "bloard.png";
 		isController = 1;
-		label = BloardPreferences;
+		label = Bloard;
 	};
 }
