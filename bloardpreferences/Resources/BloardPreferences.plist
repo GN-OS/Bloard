@@ -2,15 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>entry</key>
-	<dict>
-		<key>cell</key>
-		<string>PSLinkCell</string>
-		<key>icon</key>
-		<string>bloard.png</string>
-		<key>label</key>
-		<string>Bloard</string>
-	</dict>
 	<key>items</key>
 	<array>
 		<dict>
@@ -19,11 +10,13 @@
 			<key>default</key>
 			<true/>
 			<key>defaults</key>
-			<string>com.gnos.bloard.enabled</string>
+			<string>com.gnos.bloard</string>
 			<key>key</key>
 			<string>enabled</string>
 			<key>label</key>
 			<string>Enabled</string>
+			<key>PostNotification</key>
+			<string>com.gnos.bloard/reloadPrefs</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -32,10 +25,12 @@
 			<string>Color</string>
 		</dict>
 		<dict>
+			<key>PostNotification</key>
+			<string>com.gnos.bloard/reloadPrefs</string>
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>defaults</key>
-			<string>com.gnos.bloard.color</string>
+			<string>com.gnos.bloard</string>
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>key</key>
@@ -75,6 +70,53 @@
 				<string>Orange</string>
 				<string>Purple</string>
 				<string>Brown</string>
+			</array>
+		</dict>
+		<dict>
+			<key>bundle</key>
+			<string>AppList</string>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>isController</key>
+			<true/>
+			<key>ALSettingsKeyPrefix</key>
+			<string></string>
+			<key>ALSettingsPath</key>
+			<string>/var/mobile/Library/Preferences/com.gnos.bloard.plist</string>
+			<key>ALAllowsSelection</key>
+			<true/>
+			<key>label</key>
+			<string>Blacklist</string>
+			<key>ALChangeNotification</key>
+			<string>com.gnos.bloard/reloadPrefs</string>
+			<key>ALSectionDescriptors</key>
+			<array>
+				<dict>
+					<key>title</key>
+					<string>System Applications</string>
+					<key>predicate</key>
+					<string>isSystemApplication = TRUE</string>
+					<key>cell-class-name</key>
+					<string>ALSwitchCell</string>
+					<key>icon-size</key>
+					<integer>29</integer>
+					<key>suppress-hidden-apps</key>
+					<true/>
+				</dict>
+				<dict>
+					<key>title</key>
+					<string>User Applications</string>
+					<key>predicate</key>
+					<string>isSystemApplication = FALSE</string>
+					<key>cell-class-name</key>
+					<string>ALSwitchCell</string>
+					<key>icon-size</key>
+					<integer>29</integer>
+					<key>suppress-hidden-apps</key>
+					<true/>
+					<key>footer-title</key>
+					<string>Apps disabled here will behave normally, and will have either a dark or light keyboard as they would normally have.</string>
+				</dict>
 			</array>
 		</dict>
 		<dict>

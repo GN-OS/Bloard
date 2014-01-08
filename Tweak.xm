@@ -1,4 +1,4 @@
-#define ENABLED @"/var/mobile/Library/Preferences/com.gnos.bloard.enabled.plist"
+#define PREFSPLIST @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
 #import "UIKBRenderConfig.h"
 
@@ -11,19 +11,19 @@
 
 - (void)createDefaultPreferences {
     NSDictionary *d = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
-    [d writeToFile:ENABLED atomically:YES];
+    [d writeToFile:PREFSPLIST atomically:YES];
     [d release];
 }
 
 - (BOOL)isEnabled {
     
     NSDictionary *prefs = nil;
-    prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED]; // Load the plist
+    prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFSPLIST]; // Load the plist
     //Is ENABLED not existent?
     if (prefs == nil) { // create new plist
         [self createDefaultPreferences];
         // Load the plist again
-        prefs = [[NSDictionary alloc] initWithContentsOfFile:ENABLED];
+        prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFSPLIST];
     }
     //get the value of enabled
     BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
