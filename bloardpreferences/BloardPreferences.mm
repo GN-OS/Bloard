@@ -1,15 +1,22 @@
-@interface BloardPreferencesListController: PSListController {
-    
+//#import <Preferences/Preferences.h>
+//Tired of having header issues? Just forward-declare stuff!
+@interface PSListController : NSObject { //Good enough
     id _specifiers;
 }
+
+- (id)loadSpecifiersFromPlistName:(NSString *)name target:(id)target;
+
+@end
+@interface BloardPreferencesListController: PSListController
+
 @end
 
 @implementation BloardPreferencesListController
 - (id)specifiers {
-	if(_specifiers == nil) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"BloardPreferences" target:self] retain];
-	}
-	return _specifiers;
+    if(_specifiers == nil) {
+        _specifiers = [[self loadSpecifiersFromPlistName:@"DarkBoardPrefs" target:self] retain];
+    }
+    return _specifiers;
 }
 
 - (void)donation {
