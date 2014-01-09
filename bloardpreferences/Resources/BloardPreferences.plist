@@ -129,7 +129,7 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSLinkCell</string>
+			<string>PSStaticTextCell</string>
 			<key>action</key>
 			<string>donation</string>
 			<key>label</key>
@@ -137,7 +137,7 @@
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSLinkCell</string>
+			<string>PSStaticTextCell</string>
 			<key>action</key>
 			<string>twitter</string>
 			<key>label</key>
