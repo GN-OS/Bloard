@@ -22,55 +22,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Color</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.gnos.bloard/reloadPrefs</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.gnos.bloard</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>color</string>
-			<key>label</key>
-			<string>Keyboard Color</string>
-			<key>validTitles</key>
-			<array>
-				<string>Black</string>
-				<string>Dark gray</string>
-				<string>Light gray</string>
-				<string>White</string>
-				<string>Gray</string>
-				<string>Red</string>
-				<string>Green</string>
-				<string>Blue</string>
-				<string>Cyan</string>
-				<string>Yellow</string>
-				<string>Magenta</string>
-				<string>Orange</string>
-				<string>Purple</string>
-				<string>Brown</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<string>Black</string>
-				<string>Dark gray</string>
-				<string>Light gray</string>
-				<string>White</string>
-				<string>Gray</string>
-				<string>Red</string>
-				<string>Green</string>
-				<string>Blue</string>
-				<string>Cyan</string>
-				<string>Yellow</string>
-				<string>Magenta</string>
-				<string>Orange</string>
-				<string>Purple</string>
-				<string>Brown</string>
-			</array>
+			<string>Blacklist</string>
 		</dict>
 		<dict>
 			<key>bundle</key>
@@ -134,6 +86,8 @@
 			<string>donation</string>
 			<key>label</key>
 			<string>Donate to GN-OS</string>
+			<key>icon</key>
+			<string>paypal.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -142,6 +96,8 @@
 			<string>twitter</string>
 			<key>label</key>
 			<string>Follow us on twitter</string>
+			<key>icon</key>
+			<string>twitter.png</string>
 		</dict>
 	</array>
 	<key>title</key>

@@ -1,7 +1,5 @@
 #define PREFSPLIST @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
-#import "UIKBRenderConfig.h"
-
 @interface GNBloard : NSObject
 - (void)createDefaultPreferences;
 - (BOOL)isEnabled;
