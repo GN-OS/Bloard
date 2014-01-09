@@ -14,7 +14,7 @@
 @implementation BloardPreferencesListController
 - (id)specifiers {
     if(_specifiers == nil) {
-        _specifiers = [[self loadSpecifiersFromPlistName:@"DarkBoardPrefs" target:self] retain];
+        _specifiers = [[self loadSpecifiersFromPlistName:@"BloardPreferences" target:self] retain];
     }
     return _specifiers;
 }
