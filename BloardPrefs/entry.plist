@@ -4,7 +4,7 @@
 		cell = PSLinkCell;
 		detail = "BloardPreferencesListController";
 		icon = "bloard.png";
-		isController = 1;
+		isController = YES;
 		label = Bloard;
 	};
 }

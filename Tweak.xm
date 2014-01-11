@@ -1,67 +1,42 @@
-#define PREFSPLIST @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
+#define PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
+#define PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
-@interface GNBloard : NSObject
-- (void)createDefaultPreferences;
-- (BOOL)isEnabled;
-@end
+static NSDictionary *prefs = nil;
 
-@implementation GNBloard
-
-- (void)createDefaultPreferences {
-    NSDictionary *d = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
-    [d writeToFile:PREFSPLIST atomically:YES];
-    [d release];
+static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+		NSLog(@"bloard prefs changed");
+        // reload prefs
+        [prefs release];
+        prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
 }
 
-- (BOOL)isEnabled {
-    
-    NSDictionary *prefs = nil;
-    prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFSPLIST]; // Load the plist
-    //Is ENABLED not existent?
-    if (prefs == nil) { // create new plist
-        [self createDefaultPreferences];
-        // Load the plist again
-        prefs = [[NSDictionary alloc] initWithContentsOfFile:PREFSPLIST];
-    }
-    //get the value of enabled
-    BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
-    [prefs release];
-    return value;
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+	// register to receive changed notifications 
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, prefsChanged, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorCoalesce);
+    [pool release];
 }
 
+static BOOL enabled() {
+	if (prefs != nil) {
+		NSLog(@"bloard enabled: %d", [[prefs objectForKey:@"enabled"] boolValue]);
+		return [[prefs objectForKey:@"enabled"] boolValue];
+	}
+	else {
+		// prefs don't exist, default to NO
+		return NO;
+	}
+}
 
+@interface UIKBRenderConfig : NSObject
+- (BOOL) lightKeyboard;
 @end
-
 
 %hook UIKBRenderConfig
 
 - (BOOL) lightKeyboard {
-    GNBloard *prefs =  [[GNBloard alloc] init];
-    if ([prefs isEnabled]) {
-        [prefs release];
-        return NO;
-    
-    } else {
-        [prefs release];
-         return %orig;
-    }
+    return enabled();
 }
 
 %end
-
-%hook UITextInputTraits
-
-- (int)keyboardAppearance {
-    GNBloard *prefs =  [[GNBloard alloc] init];
-    if ([prefs isEnabled]) {
-        [prefs release];
-        return 1;
-        
-    } else {
-        [prefs release];
-        return %orig;
-    }
-}
-
-%end
-
