@@ -4,7 +4,6 @@
 static NSDictionary *prefs = nil;
 
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-		NSLog(@"bloard prefs changed");
         // reload prefs
         [prefs release];
         prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
@@ -20,7 +19,6 @@ static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStrin
 
 static BOOL enabled() {
 	if (prefs != nil) {
-		NSLog(@"bloard enabled: %d", [[prefs objectForKey:@"enabled"] boolValue]);
 		return [[prefs objectForKey:@"enabled"] boolValue];
 	}
 	else {
@@ -30,13 +28,17 @@ static BOOL enabled() {
 }
 
 @interface UIKBRenderConfig : NSObject
+@property float blurRadius;
 - (BOOL) lightKeyboard;
 @end
 
 %hook UIKBRenderConfig
 
 - (BOOL) lightKeyboard {
-    return enabled();
+    if (enabled() && [self blurRadius] != 0.9) { // if blurRadius is 0.9 then it is a passcode view, do not affect that
+    	return NO;
+    }
+    return %orig;
 }
 
 %end
