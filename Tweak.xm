@@ -1,3 +1,4 @@
+#include "substrate.h"
 #define PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
 #define PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
@@ -6,12 +7,12 @@ static NSDictionary *prefs = nil;
 static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
         // reload prefs
         [prefs release];
-        prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+        prefs = [NSDictionary dictionaryWithContentsOfFile:PreferencesFilePath];
 }
 
 %ctor {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
+	prefs = [NSDictionary dictionaryWithContentsOfFile:PreferencesFilePath];
 	// register to receive changed notifications 
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, prefsChanged, CFSTR(PreferencesChangedNotification), NULL, CFNotificationSuspensionBehaviorCoalesce);
     [pool release];
@@ -35,6 +36,8 @@ static BOOL enabled() {
 %hook UIKBRenderConfig
 
 - (BOOL) lightKeyboard {
+	float blurRadius = MSHookIvar<float>(self, "_blurRadius");
+	NSLog(@"Bloard: blurRadius = %f", blurRadius);
     if (enabled() && [self blurRadius] != 0.9) { // if blurRadius is 0.9 then it is a passcode view, do not affect that
     	return NO;
     }
