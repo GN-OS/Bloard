@@ -1,65 +1,46 @@
-#define PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
-#define PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
+#define PREFSPLIST @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
-static NSDictionary *prefs = nil;
-
-static void GNPreferencesChanged(void) {
-	// reload prefs
-	if (prefs != nil) {
-		[prefs release];
-	}
-	prefs = [NSDictionary dictionaryWithContentsOfFile:PreferencesFilePath];
-	return;
+static void createPrefsFile() {
+    NSDictionary *d = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
+    
+    [d writeToFile:PREFSPLIST atomically:YES];
 }
 
-static void GNPreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	GNPreferencesChanged();
+static BOOL isEnabled() {
+    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:PREFSPLIST]; // Load the plist
+    
+    //Is ENABLED not existent?
+                           
+    if (!prefs) { // create new plist
+        createPrefsFile();
+        // Load the plist again
+        prefs = [NSDictionary dictionaryWithContentsOfFile:PREFSPLIST];
+    }
+    //get the value of enabled
+    BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
+    return value;
 }
 
-%ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	GNPreferencesChanged();
-
-	// register to receive changed notifications 
-	CFNotificationCenterAddObserver(
-		CFNotificationCenterGetDarwinNotifyCenter(),
-		NULL,
-		GNPreferencesChangedCallback,
-		CFSTR(PreferencesChangedNotification),
-		NULL,
-		CFNotificationSuspensionBehaviorCoalesce
-	);
-	[pool release];
-}
-
-static BOOL GNIsEnabled(void) {
-	NSAutoreleasePool *p = [[NSAutoreleasePool alloc] init];
-	BOOL r;
-	if (prefs != nil) {
-		r = [[prefs objectForKey:@"enabled"] boolValue];
-	}
-	else {
-		// prefs don't exist, default to NO
-		r = NO;
-	}
-	[p release];
-	return r;
-}
-
-@interface UIKBRenderConfig : NSObject 
-- (BOOL)lightKeyboard;
-@end
 
 %hook UIKBRenderConfig
 
-- (BOOL)lightKeyboard {
-	BOOL r;
-	if (GNIsEnabled()) { // if blurRadius is 0.9 then it is a passcode view, do not affect that
-		r = NO;
-	} else {
-		r = %orig();
-	}
-	return r;
+- (BOOL) lightKeyboard {
+    
+    if (isEnabled()) {
+        return NO;
+    }
+    return YES;
+}
+
+%end
+
+%hook UITextInputTraits
+
+- (int)keyboardAppearance {
+    if (isEnabled()) {
+        return 0;
+    }
+    return 1;
 }
 
 %end
