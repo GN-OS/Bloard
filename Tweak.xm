@@ -1,20 +1,19 @@
-#define PREFSPLIST @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
+#define PreferencesFile @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
 static void createPrefsFile() {
     NSDictionary *d = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES],nil] forKeys:[NSArray arrayWithObjects:@"enabled",nil]];
-    
-    [d writeToFile:PREFSPLIST atomically:YES];
+    [d writeToFile:PreferencesFile atomically:YES];
 }
 
 static BOOL isEnabled() {
-    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:PREFSPLIST]; // Load the plist
+    NSDictionary *prefs = [NSDictionary dictionaryWithContentsOfFile:PreferencesFile]; // Load the plist
     
     //Is ENABLED not existent?
                            
     if (!prefs) { // create new plist
         createPrefsFile();
         // Load the plist again
-        prefs = [NSDictionary dictionaryWithContentsOfFile:PREFSPLIST];
+        prefs = [NSDictionary dictionaryWithContentsOfFile:PreferencesFile];
     }
     //get the value of enabled
     BOOL value = [[prefs objectForKey:@"enabled"] boolValue];
@@ -30,17 +29,6 @@ static BOOL isEnabled() {
         return NO;
     }
     return YES;
-}
-
-%end
-
-%hook UITextInputTraits
-
-- (int)keyboardAppearance {
-    if (isEnabled()) {
-        return 0;
-    }
-    return 1;
 }
 
 %end
