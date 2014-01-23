@@ -25,7 +25,7 @@ static void GNPreferencesChangedCallback(CFNotificationCenterRef center, void *o
 		CFNotificationCenterGetDarwinNotifyCenter(),
 		NULL,
 		GNPreferencesChangedCallback,
-		CFSTR(GNPreferencesChangedNotification),
+		CFSTR(PreferencesChangedNotification),
 		NULL,
 		CFNotificationSuspensionBehaviorCoalesce
 	);
