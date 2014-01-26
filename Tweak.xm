@@ -1,63 +1,58 @@
-#define CFNCAO(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce)
-
-static const char *PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
-static NSString *const PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
+#define registerNotification(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce);
+#define PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
+#define PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
 
 static NSDictionary *prefs = nil;
 
-static void GNCreatePreferencessFileIfNonExistent(void) {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	if ([[NSFileManager defaultManager] fileExistsAtPath:PreferencesFilePath]) {
-		return;
-	}
-	NSDictionary *d = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithBool:YES], nil] forKeys:[NSArray arrayWithObjects:@"enabled", nil]];
-	[d writeToFile:PreferencesFile atomically:YES];
-	[d release];
-	[p release];
-	return;
-}
-
-static void GNPreferencesChanged(void) {
+static void prefsChanged(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 	// reload prefs
-	if (prefs != nil) {
-		[prefs release];
+	[prefs release];
+	if ((prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath]) == nil) {
+		prefs = @{@"enabled": @YES};
+		[prefs writeToFile:PreferencesFilePath atomically:YES];
+		prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
 	}
-	prefs = [[NSDictionary alloc] initWithContentsOfFile:PreferencesFilePath];
-	return;
 }
 
-static void GNPreferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	GNPreferencesChanged();
-}
 
-%ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	GNCreatePreferencessFileIfNonExistent();
-	GNPreferencesChanged(); //not really
-
-	// register to receive changed notifications
-	CFNCAO(GNPreferencesChangedCallback, GNPreferencesChangedNotification);
-	[pool release];
-}
-
-static BOOL GNIsEnabled(void) {
-	NSAutoreleasePool *p = [[NSAutoreleasePool alloc] init];
-	BOOL r = NO;
-	if (prefs != nil) {
-		r = [[prefs objectForKey:@"enabled"] boolValue];
-	}
-	[p release];
-	return r;
+static BOOL isEnabled(void) {
+	return (prefs) ? [prefs[@"enabled"] boolValue] : NO; 
 }
 
 %hook UIKBRenderConfig
 
 - (BOOL)lightKeyboard {
-	BOOL r = %orig();
-	if (GNIsEnabled()) {
-		r = NO;
+	BOOL isLight = %orig();
+	if (isEnabled()) {
+		isLight = NO;
 	}
-	return r;
+	return isLight;
 }
 
 %end
+
+@interface UIPickerTableViewTitledCell : UITableViewCell
+-(void)setAttributedTitle:(NSAttributedString *)arg1;
+@end
+
+%hook UIPickerTableViewTitledCell
+
+-(void)setAttributedTitle:(NSAttributedString *)arg1 {
+	if (isEnabled()) {
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+		%orig(title);
+	}
+	else {
+		%orig(arg1);
+	}
+}
+
+%end
+
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
+	// register to receive changed notifications
+	registerNotification(prefsChanged, PreferencesChangedNotification);
+	[pool release];
+}
