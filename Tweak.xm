@@ -1,3 +1,4 @@
+//notifications!
 #define registerNotification(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce);
 #define PreferencesChangedNotification "com.gnos.bloard.prefs-changed"
 #define PreferencesFilePath @"/var/mobile/Library/Preferences/com.gnos.bloard.plist"
@@ -19,6 +20,7 @@ static BOOL isEnabled(void) {
 	return (prefs) ? [prefs[@"enabled"] boolValue] : NO; 
 }
 
+//make keyboard black
 %hook UIKBRenderConfig
 
 - (BOOL)lightKeyboard {
@@ -31,6 +33,7 @@ static BOOL isEnabled(void) {
 
 %end
 
+//make pickerView text black
 @interface UIPickerTableViewTitledCell : UITableViewCell
 -(void)setAttributedTitle:(NSAttributedString *)arg1;
 @end
@@ -49,6 +52,19 @@ static BOOL isEnabled(void) {
 
 %end
 
+//make settings keypad black
+%hook UIKeyboard
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id meow = %orig;//variable name courtesy of fr0st
+    if (isEnabled()) {
+        [self setBackgroundColor:[UIColor blackColor]];
+    }
+    return meow;
+}
+%end
+
+//register for notifications
 %ctor {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	prefsChanged(NULL, NULL, NULL, NULL, NULL); // initialize prefs
