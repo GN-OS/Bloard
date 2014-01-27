@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.gnos.bloard</string>
+			<key>key</key>
+			<string>enabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+			<key>PostNotification</key>
+			<string>com.gnos.bloard.prefs-changed</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Developed by GN-OS © 2013</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>action</key>
+			<string>donation</string>
+			<key>label</key>
+			<string>Donate to GN-OS</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>action</key>
+			<string>twitter</string>
+			<key>label</key>
+			<string>Follow us on Twitter</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Bloard</string>
+</dict>
+</plist>
