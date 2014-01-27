@@ -21,6 +21,7 @@ static BOOL isEnabled(void) {
 
 // used to track the state of UIWebFormAccessory
 static BOOL accessoryExists = NO;
+static BOOL isAllowedToSetAccessoryExists = YES;
 
 // dark keyboard
 %hook UIKBRenderConfig
@@ -57,15 +58,41 @@ static BOOL accessoryExists = NO;
 
 // set whether UIWebFormAccessory is visible or not
 %hook UIWebFormAccessory
-	
--(id)initWithFrame:(CGRect)arg1 {
-	accessoryExists = YES;
-	return %orig(arg1);
+
+-(void)layoutSubviews{
+    if (isAllowedToSetAccessoryExists) {
+        accessoryExists = YES;
+        isAllowedToSetAccessoryExists = NO;
+        %log(@"BloardUS");
+        %orig;
+    } else {
+        accessoryExists = NO;
+        isAllowedToSetAccessoryExists = YES;
+        %log(@"BloardUS");
+        %orig;
+    }
 }
 
--(void)dealloc {
+
+//to here these methods are only called the first time UIWebFormAccessory is created but we need somehting that is called each time a pickerView is shown (each time it is active)
+-(void)_previousTapped:(id)arg1 {
 	accessoryExists = NO;
-	%orig;
+    %log(@"BloardUS");
+    [self setFrame:CGRectMake(0,0,0,0)];
+	%orig(arg1);
+}
+-(void)_nextTapped:(id)arg1 {
+    accessoryExists = NO;
+    %log(@"BloardUS");
+    [self setFrame:CGRectMake(0,0,0,0)];
+	%orig(arg1);
+}
+
+-(void)done:(id)arg1 {
+    accessoryExists = NO;
+    %log(@"BloardUS");
+    [self setFrame:CGRectMake(0,0,0,0)];
+    %orig(arg1);
 }
 
 %end
