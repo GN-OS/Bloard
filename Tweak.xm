@@ -31,8 +31,9 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 	if (isEnabled()) {
         %log(@"BloardUSShouldBeBlack");
 		isLight = NO;
-	}
-    %log(@"BloardUSShouldBeWhite");
+	} else {
+        %log(@"BloardUSShouldBeWhite");
+    }
 	return isLight;
 }
 
