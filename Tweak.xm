@@ -21,7 +21,6 @@ static BOOL isEnabled(void) {
 
 // used to track the state of UIWebFormAccessory
 static BOOL accessoryExists = NO;
-static BOOL isAllowedToSetAccessoryExists = YES;
 
 // dark keyboard
 %hook UIKBRenderConfig
@@ -29,24 +28,9 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 -(BOOL)lightKeyboard {
 	BOOL isLight = %orig;
 	if (isEnabled()) {
-        %log(@"BloardUSShouldBeBlack");
 		isLight = NO;
 	}
-    %log(@"BloardUSShouldBeWhite");
 	return isLight;
-}
-
-%end
-
-// dark PIN keypad in Settings
-%hook DevicePINKeypad
-
--(id)initWithFrame:(CGRect)arg1 {
-    id keypad = %orig;
-    if (isEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
-	}
-	return keypad;
 }
 
 %end
@@ -73,41 +57,15 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 
 // set whether UIWebFormAccessory is visible or not
 %hook UIWebFormAccessory
-
--(void)layoutSubviews{
-    if (isAllowedToSetAccessoryExists) {
-        accessoryExists = YES;
-        isAllowedToSetAccessoryExists = NO;
-        %log(@"BloardUS");
-        %orig;
-    } else {
-        accessoryExists = NO;
-        isAllowedToSetAccessoryExists = YES;
-        %log(@"BloardUS");
-        %orig;
-    }
+	
+-(id)initWithFrame:(CGRect)arg1 {
+	accessoryExists = YES;
+	return %orig(arg1);
 }
 
-
-//to here these methods are only called the first time UIWebFormAccessory is created but we need somehting that is called each time a pickerView is shown (each time it is active)
--(void)_previousTapped:(id)arg1 {
+-(void)dealloc {
 	accessoryExists = NO;
-    %log(@"BloardUS");
-    [self setFrame:CGRectMake(0,0,0,0)];
-	%orig(arg1);
-}
--(void)_nextTapped:(id)arg1 {
-    accessoryExists = NO;
-    %log(@"BloardUS");
-    [self setFrame:CGRectMake(0,0,0,0)];
-	%orig(arg1);
-}
-
--(void)done:(id)arg1 {
-    accessoryExists = NO;
-    %log(@"BloardUS");
-    [self setFrame:CGRectMake(0,0,0,0)];
-    %orig(arg1);
+	%orig;
 }
 
 %end
@@ -136,6 +94,19 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 	else {
 		%orig(arg1);
 	}
+}
+
+%end
+
+// dark PIN keypad in Settings
+%hook DevicePINKeypad
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id keypad = %orig;
+    if (isEnabled()) {
+		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
+	}    	
+	return keypad;
 }
 
 %end

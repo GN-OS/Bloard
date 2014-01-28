@@ -19,22 +19,6 @@
 			<string>com.gnos.bloard.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>label</key>
-			<string>Flipswitch switch/toggle</string>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>action</key>
-			<string>getFlipswitchToggle</string>
-			<key>label</key>
-			<string>Get the Flipswitch switch/toggle</string>
-		</dict>
-		<dict>
-			<key>label</key>
-			<string>Donation / Contact us</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
