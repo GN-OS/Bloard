@@ -29,11 +29,8 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 -(BOOL)lightKeyboard {
 	BOOL isLight = %orig;
 	if (isEnabled()) {
-        %log(@"BloardUSShouldBeBlack");
 		isLight = NO;
-	} else {
-        %log(@"BloardUSShouldBeWhite");
-    }
+	}
 	return isLight;
 }
 
@@ -46,6 +43,18 @@ static BOOL isAllowedToSetAccessoryExists = YES;
     id keypad = %orig;
     if (isEnabled()) {
 		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
+	}
+	return keypad;
+}
+
+%end
+//dark pickerView background
+%hook UIPickerView
+
+-(void)setBackgroundColor:(id)arg1 {
+    id keypad = %orig;
+    if (isEnabled()) {
+        %orig([UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]);
 	}
 	return keypad;
 }
@@ -79,12 +88,10 @@ static BOOL isAllowedToSetAccessoryExists = YES;
     if (isAllowedToSetAccessoryExists) {
         accessoryExists = YES;
         isAllowedToSetAccessoryExists = NO;
-        %log(@"BloardUS");
         %orig;
     } else {
         accessoryExists = NO;
         isAllowedToSetAccessoryExists = YES;
-        %log(@"BloardUS");
         %orig;
     }
 }
@@ -93,20 +100,17 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 //to here these methods are only called the first time UIWebFormAccessory is created but we need somehting that is called each time a pickerView is shown (each time it is active)
 -(void)_previousTapped:(id)arg1 {
 	accessoryExists = NO;
-    %log(@"BloardUS");
     [self setFrame:CGRectMake(0,0,0,0)];
 	%orig(arg1);
 }
 -(void)_nextTapped:(id)arg1 {
     accessoryExists = NO;
-    %log(@"BloardUS");
     [self setFrame:CGRectMake(0,0,0,0)];
 	%orig(arg1);
 }
 
 -(void)done:(id)arg1 {
     accessoryExists = NO;
-    %log(@"BloardUS");
     [self setFrame:CGRectMake(0,0,0,0)];
     %orig(arg1);
 }
