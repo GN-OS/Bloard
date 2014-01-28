@@ -51,6 +51,7 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 //dark pickerView background
 %hook UIPickerView
 
+//this sets the background color of a UIPickerView each time it is called overiring it. This is necessary since The first time a UIPickerView is shown in an app it is caleld before UIKBrenderConfig.
 -(void)setBackgroundColor:(id)arg1 {
     id keypad = %orig;
     if (isEnabled()) {
@@ -61,7 +62,7 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 
 %end
 
-// white UIPickerView text entries
+//white UIPickerView text entries
 @interface UIPickerTableViewTitledCell : UITableViewCell
 -(void)setAttributedTitle:(NSAttributedString *)arg1;
 @end
@@ -85,6 +86,7 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 %hook UIWebFormAccessory
 
 -(void)layoutSubviews{
+    //this if stateemnt will alow us to determine if it was hidden or launched by a simple bool. The first part is it being shown and second hidden. This allows us to set accessoryExists
     if (isAllowedToSetAccessoryExists) {
         accessoryExists = YES;
         isAllowedToSetAccessoryExists = NO;
@@ -97,20 +99,23 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 }
 
 
-//to here these methods are only called the first time UIWebFormAccessory is created but we need somehting that is called each time a pickerView is shown (each time it is active)
+//detect when the pickerView was killed through these buttons we use these to set the Bool used up there^^ to detect when it is shown
 -(void)_previousTapped:(id)arg1 {
 	accessoryExists = NO;
+    //set frame to make sure layoutSubviews gets caleld because it has to reset it
     [self setFrame:CGRectMake(0,0,0,0)];
 	%orig(arg1);
 }
 -(void)_nextTapped:(id)arg1 {
     accessoryExists = NO;
+    //set frame to make sure layoutSubviews gets caleld because it has to reset it
     [self setFrame:CGRectMake(0,0,0,0)];
 	%orig(arg1);
 }
 
 -(void)done:(id)arg1 {
     accessoryExists = NO;
+    //set frame to make sure layoutSubviews gets caleld because it has to reset it
     [self setFrame:CGRectMake(0,0,0,0)];
     %orig(arg1);
 }
