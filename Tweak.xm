@@ -29,9 +29,24 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 -(BOOL)lightKeyboard {
 	BOOL isLight = %orig;
 	if (isEnabled()) {
+        %log(@"BloardUSShouldBeBlack");
 		isLight = NO;
 	}
+    %log(@"BloardUSShouldBeWhite");
 	return isLight;
+}
+
+%end
+
+// dark PIN keypad in Settings
+%hook DevicePINKeypad
+
+-(id)initWithFrame:(CGRect)arg1 {
+    id keypad = %orig;
+    if (isEnabled()) {
+		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
+	}
+	return keypad;
 }
 
 %end
@@ -121,19 +136,6 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 	else {
 		%orig(arg1);
 	}
-}
-
-%end
-
-// dark PIN keypad in Settings
-%hook DevicePINKeypad
-
--(id)initWithFrame:(CGRect)arg1 {
-    id keypad = %orig;
-    if (isEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
-	}    	
-	return keypad;
 }
 
 %end
