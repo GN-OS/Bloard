@@ -100,19 +100,6 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 
 
 //detect when the pickerView was killed through these buttons we use these to set the Bool used up there^^ to detect when it is shown
--(void)_previousTapped:(id)arg1 {
-	accessoryExists = NO;
-    //set frame to make sure layoutSubviews gets caleld because it has to reset it
-    [self setFrame:CGRectMake(0,0,0,0)];
-	%orig(arg1);
-}
--(void)_nextTapped:(id)arg1 {
-    accessoryExists = NO;
-    //set frame to make sure layoutSubviews gets caleld because it has to reset it
-    [self setFrame:CGRectMake(0,0,0,0)];
-	%orig(arg1);
-}
-
 -(void)done:(id)arg1 {
     accessoryExists = NO;
     //set frame to make sure layoutSubviews gets caleld because it has to reset it
