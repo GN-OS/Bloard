@@ -53,11 +53,11 @@ static BOOL isAllowedToSetAccessoryExists = YES;
 
 //this sets the background color of a UIPickerView each time it is called overiring it. This is necessary since The first time a UIPickerView is shown in an app it is caleld before UIKBrenderConfig.
 -(void)setBackgroundColor:(id)arg1 {
-    id keypad = %orig;
     if (isEnabled()) {
         %orig([UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]);
-	}
-	return keypad;
+	} else {
+        %orig(arg1);
+    }
 }
 
 %end
