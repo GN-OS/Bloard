@@ -62,6 +62,41 @@ static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/c
 	else {
 		%orig(arg1);
 	}
+	return keypad;
+}
+
+%end
+
+//dark pickerView background
+%hook UIPickerView
+
+//this sets the background color of a UIPickerView each time it is called overiring it. This is necessary since The first time a UIPickerView is shown in an app it is caleld before UIKBrenderConfig.
+-(void)setBackgroundColor:(id)arg1 {
+    if (isEnabled()) {
+        %orig([UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]);
+	} else {
+        %orig(arg1);
+    }
+}
+
+%end
+
+//white UIPickerView text entries
+@interface UIPickerTableViewTitledCell : UITableViewCell
+-(void)setAttributedTitle:(NSAttributedString *)arg1;
+@end
+
+%hook UIPickerTableViewTitledCell
+
+-(void)setAttributedTitle:(NSAttributedString *)arg1 {
+	if (isEnabled()) {
+		// white UIPickerView text
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+		%orig(title);
+	}
+	else {
+		%orig(arg1);
+	}
 }
 
 %end
