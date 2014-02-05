@@ -30,7 +30,7 @@
 			<key>action</key>
 			<string>donation</string>
 			<key>cell</key>
-			<string>PSStaticTextCell</string>
+			<string>PSButtonCell</string>
 			<key>icon</key>
 			<string>paypal.png</string>
 			<key>label</key>
@@ -40,11 +40,19 @@
 			<key>action</key>
 			<string>twitter</string>
 			<key>cell</key>
-			<string>PSStaticTextCell</string>
+			<string>PSButtonCell</string>
 			<key>icon</key>
 			<string>twitter.png</string>
 			<key>label</key>
 			<string>Follow us on Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>irc</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Chat with us on IRC</string>
 		</dict>
 	</array>
 	<key>title</key>

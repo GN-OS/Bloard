@@ -31,4 +31,8 @@
     }
 }
 
+-(void)irc {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://mibbit.com/?channel=%23GN-OSSupport&server=irc.saurik.com"]];
+}
+
 @end
