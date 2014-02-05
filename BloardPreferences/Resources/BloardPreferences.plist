@@ -28,16 +28,6 @@
 		</dict>
 		<dict>
 			<key>action</key>
-			<string>donation</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>icon</key>
-			<string>paypal.png</string>
-			<key>label</key>
-			<string>Donate to GN-OS</string>
-		</dict>
-		<dict>
-			<key>action</key>
 			<string>twitter</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
@@ -51,8 +41,20 @@
 			<string>irc</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>irc.png</string>
 			<key>label</key>
 			<string>Chat with us on IRC</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>donation</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate to GN-OS</string>
 		</dict>
 	</array>
 	<key>title</key>
