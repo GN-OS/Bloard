@@ -1,3 +1,4 @@
+#export TARGET = iphone:clang:latest:6.0
 export ARCHS = armv7 arm64
 export SDKVERSION = 7.0
 export THEOS_BUILD_DIR = packages
@@ -14,5 +15,6 @@ include $(THEOS_MAKE_PATH)/tweak.mk
 after-install::
 	install.exec "killall -9 SpringBoard"
 
-SUBPROJECTS += BloardPrefs
+SUBPROJECTS += BloardPreferences
+SUBPROJECTS += BloardFlipswitch
 include $(THEOS_MAKE_PATH)/aggregate.mk

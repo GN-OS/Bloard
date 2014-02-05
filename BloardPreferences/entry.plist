@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = BloardPreferences;
+		cell = PSLinkCell;
+		detail = "BloardPreferencesListController";
+		icon = "bloard.png";
+		isController = YES;
+		label = Bloard;
+	};
+}
