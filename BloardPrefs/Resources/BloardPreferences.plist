@@ -5,8 +5,6 @@
 	<key>items</key>
 	<array>
 		<dict>
-			<key>PostNotification</key>
-			<string>com.gnos.bloard.preferences.changed</string>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
@@ -17,34 +15,34 @@
 			<string>enabled</string>
 			<key>label</key>
 			<string>Enabled</string>
+			<key>PostNotification</key>
+			<string>com.gnos.bloard.prefs-changed</string>
 		</dict>
 		<dict>
-			<key>label</key>
-			<string>Donation / Contact us</string>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
 			<string>Developed by GN-OS © 2013</string>
 		</dict>
 		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
 			<key>action</key>
 			<string>donation</string>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>icon</key>
-			<string>paypal.png</string>
 			<key>label</key>
 			<string>Donate to GN-OS</string>
+			<key>icon</key>
+			<string>paypal.png</string>
 		</dict>
 		<dict>
-			<key>action</key>
-			<string>twitter</string>
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
-			<key>icon</key>
-			<string>twitter.png</string>
+			<key>action</key>
+			<string>twitter</string>
 			<key>label</key>
 			<string>Follow us on Twitter</string>
+			<key>icon</key>
+			<string>twitter.png</string>
 		</dict>
 	</array>
 	<key>title</key>

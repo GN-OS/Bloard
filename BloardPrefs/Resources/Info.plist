@@ -5,11 +5,9 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>BloardFlipswitch</string>
+	<string>BloardPreferences</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.gnos.bloard.flipswitch</string>
-	<key>CFBundleDisplayName</key>
-	<string>BloardFlipswitch</string>
+	<string>com.gnos.bloardpreferences</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
@@ -25,8 +23,6 @@
 	<key>MinimumOSVersion</key>
 	<string>3.0</string>
 	<key>NSPrincipalClass</key>
-	<string>BloardFlipswitchSwitch</string>
-	<key>alternate-action-url</key>
-	<string>prefs:</string>
+	<string>BloardPreferencesListController</string>
 </dict>
 </plist>
