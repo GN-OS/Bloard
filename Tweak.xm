@@ -3,10 +3,36 @@ static BOOL tweakIsEnabled(void);
 //start specific tweak code
 
 static BOOL accessoryExists = NO;
-static BOOL isAllowedToSetAccessoryExists = YES;
+static BOOL isAllowedToSetAccessoryExistsForPickerView = YES;
 
 static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/com.gnos.bloard.plist";
 #define preferencesChangedNotification "com.gnos.bloard.preferences.changed"
+
+//////////////////
+
+unsigned long long deepness = 0;
+
+#define logStart0() do { NSLog(@"uroboro %d; %s {", deepness, __PRETTY_FUNCTION__); deepness++; } while (0)
+#define logStart() do { NSLog(@"uroboro %lld; class: %@; method: %@; {", deepness, NSStringFromClass([self class]), NSStringFromSelector(_cmd)); deepness++; } while (0)
+#define logEnd() do { deepness--; NSLog(@"uroboro; }%s", deepness?"":" //so deep"); } while (0)
+
+#define logBlock(block) logStart(); block; logEnd();
+
+%hook UIKeyboard
+-(void)geometryChangeDone:(BOOL)arg1{
+    if (tweakIsEnabled()) {
+        if (arg1 == NO) {
+            accessoryExists = NO;
+            isAllowedToSetAccessoryExistsForPickerView = YES;
+        } else {
+            accessoryExists = YES;
+            isAllowedToSetAccessoryExistsForPickerView = NO;
+        }
+    }
+    
+    return %orig(arg1);
+}
+%end
 
 %hook UIKBRenderConfig
 
@@ -26,22 +52,9 @@ static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/c
 -(id)initWithFrame:(CGRect)arg1 {
     id keypad = %orig;
     if (tweakIsEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
+		[self setBackgroundColor:[UIColor colorWithWhite:40/255.0 alpha:0.7]];
 	}
 	return keypad;
-}
-
-%end
-//dark pickerView background
-%hook UIPickerView
-
-//this sets the background color of a UIPickerView each time it is called overiring it. This is necessary since The first time a UIPickerView is shown in an app it is caleld before UIKBrenderConfig.
--(void)setBackgroundColor:(id)arg1 {
-    if (tweakIsEnabled()) {
-        %orig([UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]);
-	} else {
-        %orig(arg1);
-    }
 }
 
 %end
@@ -70,14 +83,16 @@ static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/c
 %hook UIWebFormAccessory
 
 -(void)layoutSubviews{
-    //this if stateemnt will alow us to determine if it was hidden or launched by a simple bool. The first part is it being shown and second hidden. This allows us to set accessoryExists
-    if (isAllowedToSetAccessoryExists) {
+    //this if statement will alow us to determine if it was hidden or launched by a simple bool. The first part is it being shown and second hidden. This allows us to set accessoryExists
+    if (isAllowedToSetAccessoryExistsForPickerView) {
         accessoryExists = YES;
-        isAllowedToSetAccessoryExists = NO;
+        NSLog(@"        accessoryExists = YES;______________________________");
+        isAllowedToSetAccessoryExistsForPickerView = NO;
         %orig;
     } else {
         accessoryExists = NO;
-        isAllowedToSetAccessoryExists = YES;
+        NSLog(@"        accessoryExists = NO;______________________________");
+        isAllowedToSetAccessoryExistsForPickerView = YES;
         %orig;
     }
 }
