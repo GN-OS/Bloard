@@ -71,7 +71,7 @@ unsigned long long deepness = 0;
 		// white UIPickerView text
 		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
-	}
+	}9
 	else {
 		%orig(arg1);
 	}
