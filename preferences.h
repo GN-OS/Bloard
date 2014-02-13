@@ -1,3 +1,6 @@
+static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/com.gnos.bloard.plist";
+#define preferencesChangedNotification "com.gnos.bloard.preferences.changed"
+ 
 #define addObserver(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce)
 #define preferencesChanged() preferencesChangedCallback(NULL, NULL, NULL, NULL, NULL)
 
@@ -14,12 +17,4 @@ static BOOL tweakIsEnabled(void) {
 	BOOL enabled = (prefs)? [prefs[@"enabled"] boolValue] : NO;
 	[pool release];
 	return enabled;
-}
-
-%ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	preferencesChanged();  // Not really
-	// Register to receive changed notifications
-	addObserver(preferencesChangedCallback, preferencesChangedNotification);
-	[pool release];
 }

@@ -1,11 +1,6 @@
 #import "substrate.h"
 #import "preferences.h"
 
-//start specific tweak code
-
-static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/com.gnos.bloard.plist";
-#define preferencesChangedNotification "com.gnos.bloard.preferences.changed"
-
 unsigned long long deepness = 0;
 
 #define logStart0() do { NSLog(@"uroboro %d; %s {", deepness, __PRETTY_FUNCTION__); deepness++; } while (0)
@@ -60,19 +55,34 @@ unsigned long long deepness = 0;
 
 %end
 
-// White chevrons and done button
 %hook UIWebFormAccessory
 
--(void)layoutSubviews {
-    %orig;
-    if (tweakIsEnabled()) {
-    	// Previous chevron
-   		UIBarButtonItem *item = MSHookIvar<UIBarButtonItem *>(self, "_previousItem");
-		[item setTintColor: [UIColor whiteColor]];
-		// Next chevron
-		item = MSHookIvar<UIBarButtonItem *>(self, "_nextItem");
-		[item setTintColor: [UIColor whiteColor]];
+// White chevrons
++(id)toolbarWithItems:(NSArray *)items {
+	if (tweakIsEnabled) {
+		for (UIBarButtonItem *item in items) {
+			[item setTintColor: [UIColor whiteColor]];
+		}
 	}
+	return %orig(items);
+}
+
+// White Done button
+-(void)layoutSubviews {
+	if (tweakIsEnabled) {
+		NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0]; 
+	}
+	%orig;
+
 }
 
 %end
+
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	preferencesChanged();  // Not really
+	// Register to receive changed notifications
+	addObserver(preferencesChangedCallback, preferencesChangedNotification);
+	[pool release];
+}
