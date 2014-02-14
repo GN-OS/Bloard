@@ -1,5 +1,5 @@
 static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/com.gnos.bloard.plist";
-#define preferencesChangedNotification "com.gnos.bloard.preferences.changed"
+#define preferencesChangedNotification "com.gnos.bloard.preferences.changed" 
  
 #define addObserver(c, n) CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (c), CFSTR(n), NULL, CFNotificationSuspensionBehaviorCoalesce)
 #define preferencesChanged() preferencesChangedCallback(NULL, NULL, NULL, NULL, NULL)
