@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.gnos.bloard.preferences.changed</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.gnos.bloard</string>
+			<key>key</key>
+			<string>enabled</string>
+			<key>label</key>
+			<string>Enabled</string>
+		</dict>
+		<dict>
+<<<<<<< HEAD:BloardPrefs/Resources/BloardPreferences.plist
+=======
+			<key>label</key>
+			<string>Donation / Contact us</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Developed by GN-OS © 2013</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>twitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>twitter.png</string>
+			<key>label</key>
+			<string>Follow us on Twitter</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>irc</string>
+>>>>>>> debug:BloardPreferences/Resources/BloardPreferences.plist
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>irc.png</string>
+			<key>label</key>
+			<string>Chat with us on IRC</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>donation</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>paypal.png</string>
+			<key>label</key>
+			<string>Donate to GN-OS</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Bloard</string>
+</dict>
+</plist>
