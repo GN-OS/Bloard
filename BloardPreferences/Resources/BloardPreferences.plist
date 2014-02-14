@@ -19,8 +19,6 @@
 			<string>Enabled</string>
 		</dict>
 		<dict>
-<<<<<<< HEAD:BloardPrefs/Resources/BloardPreferences.plist
-=======
 			<key>label</key>
 			<string>Donation / Contact us</string>
 			<key>cell</key>
@@ -41,7 +39,6 @@
 		<dict>
 			<key>action</key>
 			<string>irc</string>
->>>>>>> debug:BloardPreferences/Resources/BloardPreferences.plist
 			<key>cell</key>
 			<string>PSButtonCell</string>
 			<key>icon</key>
