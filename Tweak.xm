@@ -59,7 +59,7 @@ unsigned long long deepness = 0;
 
 // White chevrons
 +(id)toolbarWithItems:(NSArray *)items {
-	if (tweakIsEnabled) {
+	if (tweakIsEnabled()) {
 		for (UIBarButtonItem *item in items) {
 			[item setTintColor: [UIColor whiteColor]];
 		}
@@ -69,7 +69,7 @@ unsigned long long deepness = 0;
 
 // White Done button
 -(void)layoutSubviews {
-	if (tweakIsEnabled) {
+	if (tweakIsEnabled()) {
 		NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
 		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0]; 
 	}

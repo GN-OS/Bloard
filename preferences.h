@@ -7,7 +7,7 @@ static NSString *const preferencesFilePath = @"/var/mobile/Library/Preferences/c
 static NSDictionary *prefs = nil;
 
 static void preferencesChangedCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
-	// reload prefs
+	// Reload prefs
 	[prefs release];
 	prefs = [[NSDictionary alloc] initWithContentsOfFile:preferencesFilePath];
 }
