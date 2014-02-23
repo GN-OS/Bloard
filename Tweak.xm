@@ -6,8 +6,26 @@ unsigned long long deepness = 0;
 #define logStart0() do { NSLog(@"uroboro %d; %s {", deepness, __PRETTY_FUNCTION__); deepness++; } while (0)
 #define logStart() do { NSLog(@"uroboro %lld; class: %@; method: %@; {", deepness, NSStringFromClass([self class]), NSStringFromSelector(_cmd)); deepness++; } while (0)
 #define logEnd() do { deepness--; NSLog(@"uroboro; }%s", deepness?"":" //so deep"); } while (0)
-
 #define logBlock(block) logStart(); block; logEnd();
+
+// We need to monitor when the Mail compose view is open so we can disable white UIPickerView text
+// The UIPickerView it shows for From: email selection has a white background, and white text on white background is not pleasant :p
+static BOOL mailComposeViewIsOpen = NO;
+
+%hook MFMailComposeView
+
+-(void)layoutSubviews { 
+	mailComposeViewIsOpen = YES;
+	%orig;
+}
+
+-(void)willDisappear {
+	mailComposeViewIsOpen = NO;
+	%orig;
+}
+
+%end
+
 
 // Dark keyboard background
 %hook UIKBRenderConfig
@@ -43,7 +61,7 @@ unsigned long long deepness = 0;
 %hook UIPickerTableViewTitledCell
 
 -(void)setAttributedTitle:(NSAttributedString *)arg1 {
-	if (tweakIsEnabled()) {
+	if (tweakIsEnabled() && (mailComposeViewIsOpen == NO)) {
 		// white UIPickerView text
 		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
@@ -54,6 +72,9 @@ unsigned long long deepness = 0;
 }
 
 %end
+
+@interface UIWebFormAccessory : UIInputView 
+@end
 
 %hook UIWebFormAccessory
 
@@ -71,7 +92,7 @@ unsigned long long deepness = 0;
 -(void)layoutSubviews {
 	if (tweakIsEnabled()) {
 		NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0]; 
+		[[UIBarButtonItem appearanceWhenContainedIn:[UIToolbar class],[UIWebFormAccessory class], nil] setTitleTextAttributes:attributes forState:0]; 
 	}
 	%orig;
 

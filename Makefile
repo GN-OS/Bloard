@@ -1,4 +1,3 @@
-#export TARGET = iphone:clang:latest:6.0
 export ARCHS = armv7 arm64
 export SDKVERSION = 7.0
 export THEOS_BUILD_DIR = packages
