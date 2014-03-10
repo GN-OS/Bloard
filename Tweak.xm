@@ -61,7 +61,7 @@ static BOOL mailComposeViewIsOpen = NO;
 %hook UIPickerTableViewTitledCell
 
 -(void)setAttributedTitle:(NSAttributedString *)arg1 {
-	if (tweakIsEnabled() && (mailComposeViewIsOpen == NO)) {
+	if (tweakIsEnabled()) {
 		// white UIPickerView text
 		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
@@ -69,6 +69,19 @@ static BOOL mailComposeViewIsOpen = NO;
 	else {
 		%orig(arg1);
 	}
+}
+
+%end
+
+//black background in mail compose pickerView
+%hook UIPickerView
+-(void)setBackgroundColor:(id)arg1 {
+    if (tweakIsEnabled() && mailComposeViewIsOpen /*&& alreadyChangedColor == NO*/) {
+        %orig([UIColor colorWithWhite:40/255.0 alpha:0.7]);
+        //alreadyChangedColor = YES;
+    } else {
+        %orig(arg1);
+    }
 }
 
 %end
