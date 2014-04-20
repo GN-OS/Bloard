@@ -1,30 +1,16 @@
-#import "substrate.h"
-#import "preferences.h"
+#include "GNSharedCode.h"
 
-unsigned long long deepness = 0;
+static const char *bloardNotification = "com.gnos.bloard";
+static const char *enabledKey = "enabled";
 
-#define logStart0() do { NSLog(@"uroboro %d; %s {", deepness, __PRETTY_FUNCTION__); deepness++; } while (0)
-#define logStart() do { NSLog(@"uroboro %lld; class: %@; method: %@; {", deepness, NSStringFromClass([self class]), NSStringFromSelector(_cmd)); deepness++; } while (0)
-#define logEnd() do { deepness--; NSLog(@"uroboro; }%s", deepness?"":" //so deep"); } while (0)
-#define logBlock(block) logStart(); block; logEnd();
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	GNOSpreferencesSetup(bloardNotification);
+	[pool release];
+}
 
-// We need to monitor when the Mail compose view is open so we can disable white UIPickerView text
-// The UIPickerView it shows for From: email selection has a white background, and white text on white background is not pleasant :p
+//see MFMailComposeView %hook
 static BOOL mailComposeViewIsOpen = NO;
-
-%hook MFMailComposeView
-
--(void)layoutSubviews { 
-	mailComposeViewIsOpen = YES;
-	%orig;
-}
-
--(void)willDisappear {
-	mailComposeViewIsOpen = NO;
-	%orig;
-}
-
-%end
 
 
 // Dark keyboard background
@@ -32,7 +18,7 @@ static BOOL mailComposeViewIsOpen = NO;
 
 - (BOOL)lightKeyboard {
 	BOOL light = %orig();
-	if (tweakIsEnabled()) {
+	if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey)) {
 		light = NO;
 	}
 	return light;
@@ -43,10 +29,10 @@ static BOOL mailComposeViewIsOpen = NO;
 // Dark PIN keypad in Settings
 %hook DevicePINKeypad
 
--(id)initWithFrame:(CGRect)arg1 {
-    id keypad = %orig;
-    if (tweakIsEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithWhite:40/255.0 alpha:0.7]];
+- (id)initWithFrame:(CGRect)frame {
+    id keypad = %orig();
+    if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey)) {
+		[keypad setBackgroundColor:[UIColor colorWithWhite:40/255.0 alpha:0.7]];
 	}
 	return keypad;
 }
@@ -54,20 +40,23 @@ static BOOL mailComposeViewIsOpen = NO;
 %end
 
 // White UIPickerView text entries
+#if 0
 @interface UIPickerTableViewTitledCell : UITableViewCell
--(void)setAttributedTitle:(NSAttributedString *)arg1;
+-(void)setAttributedTitle:(NSAttributedString *)attributedString;
 @end
+#endif
 
 %hook UIPickerTableViewTitledCell
 
--(void)setAttributedTitle:(NSAttributedString *)arg1 {
-	if (tweakIsEnabled()) {
+- (void)setAttributedTitle:(NSAttributedString *)attributedString {
+	if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey)) {
 		// white UIPickerView text
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+		NSDictionary *attributes = @{ NSForegroundColorAttributeName: [UIColor whiteColor] };
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:attributes];
 		%orig(title);
-	}
-	else {
-		%orig(arg1);
+		[title release];
+	} else {
+		%orig();
 	}
 }
 
@@ -75,48 +64,59 @@ static BOOL mailComposeViewIsOpen = NO;
 
 //black background in mail compose pickerView
 %hook UIPickerView
--(void)setBackgroundColor:(id)arg1 {
-    if (tweakIsEnabled() && mailComposeViewIsOpen /*&& alreadyChangedColor == NO*/) {
+
+-(void)setBackgroundColor:(UIColor *)color {
+    if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey) && mailComposeViewIsOpen) {
         %orig([UIColor colorWithWhite:40/255.0 alpha:0.7]);
-        //alreadyChangedColor = YES;
     } else {
-        %orig(arg1);
+        %orig(color);
     }
 }
 
 %end
 
+#if 0
 @interface UIWebFormAccessory : UIInputView 
 @end
+#endif
 
 %hook UIWebFormAccessory
 
 // White chevrons
-+(id)toolbarWithItems:(NSArray *)items {
-	if (tweakIsEnabled()) {
++ (id)toolbarWithItems:(NSArray *)items {
+	if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey)) {
 		for (UIBarButtonItem *item in items) {
-			[item setTintColor: [UIColor whiteColor]];
+			[item setTintColor:[UIColor whiteColor]];
 		}
 	}
 	return %orig(items);
 }
 
 // White Done button
--(void)layoutSubviews {
-	if (tweakIsEnabled()) {
+- (void)layoutSubviews {
+	if (GNOSpreferencesGetBoolKey(bloardNotification, enabledKey)) {
 		NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-		[[UIBarButtonItem appearanceWhenContainedIn:[UIToolbar class],[UIWebFormAccessory class], nil] setTitleTextAttributes:attributes forState:0]; 
+		//what is going on here? Why is this using a class method?
+		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0];
 	}
-	%orig;
+	%orig();
 
 }
 
 %end
 
-%ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	preferencesChanged();  // Not really
-	// Register to receive changed notifications
-	addObserver(preferencesChangedCallback, preferencesChangedNotification);
-	[pool release];
+// We need to monitor when the Mail compose view is open so we can disable white UIPickerView text
+// The UIPickerView it shows for From: email selection has a white background, and white text on white background is not pleasant :p
+%hook MFMailComposeView
+
+- (void)layoutSubviews { 
+	mailComposeViewIsOpen = YES;
+	%orig();
 }
+
+- (void)willDisappear {
+	mailComposeViewIsOpen = NO;
+	%orig();
+}
+
+%end
