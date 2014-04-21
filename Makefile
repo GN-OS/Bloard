@@ -6,7 +6,8 @@ include theos/makefiles/common.mk
 
 TWEAK_NAME = Bloard
 Bloard_FRAMEWORKS = UIKit
-Bloard_FILES = Tweak.xm
+GNSOURCES = sources
+Bloard_FILES = $(wildcard $(GNSOURCES)/*.c) $(wildcard $(GNSOURCES)/*.cpp) $(wildcard $(GNSOURCES)/*.m) $(wildcard $(GNSOURCES)/*.mm) $(wildcard $(GNSOURCES)/*.x) $(wildcard $(GNSOURCES)/*.xm)
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
