@@ -2,6 +2,9 @@
 #import "FSSwitchPanel.h"
 #include "UFSSharedCode.h"
 
+static const char *bloardNotification = "com.gnos.bloard";
+static const char *enabledKey = "enabled";
+
 @interface BloardFlipswitchSwitch : NSObject <FSSwitchDataSource>
 @end
 
@@ -14,8 +17,6 @@
 }
 
 - (void)applyState:(FSSwitchState)newState forSwitchIdentifier:(NSString *)switchIdentifier {
-	const char *bloardNotification = "com.gnos.bloard";
-	const char *enabledKey = "enabled";
 	switch (newState) {
 	case FSSwitchStateIndeterminate:
 		break;
