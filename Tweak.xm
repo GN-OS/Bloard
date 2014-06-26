@@ -1,22 +1,28 @@
-#include "UFSSharedCode.h"
+#include <CoreFoundation/CFNotificationCenter.h>
+#import <Foundation/NSUserDefaults.h>
+#import <Foundation/NSString.h>
 
-static const char *bloardNotification = "com.gnos.bloard";
-static const char *enabledKey = "enabled";
+@interface NSUserDefaults (UFS_Category)
+- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+@end
 
+static NSString *domainString = @"com.gnos.bloard";
+static NSString *notificationString = @"com.gnos.bloard/preferences.changed";
 static BOOL enabled;
 
-notificationCallback() {
-	NSNumber *n = (NSNumber *)NSPGetKey(bloardNotification, enabledKey);
+static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	NSNumber *n = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"enabled" inDomain:domainString];
 	enabled = (n)? [n boolValue]:YES;
 }
 
 %ctor {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	//set initial `enable' variable
-	NSNumber *n = (NSNumber *)NSPGetKey(bloardNotification, enabledKey);
-	enabled = (n)? [n boolValue]:YES;
+	notificationCallback(NULL, NULL, NULL, NULL, NULL);
+
 	//register for notifications
-	CFNCAddObserver(bloardNotification, notificationCallback);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
 	[pool release];
 }
 
@@ -26,7 +32,7 @@ static BOOL mailComposeViewIsOpen = NO;
 
 %hook MFMailComposeView
 
-- (void)layoutSubviews { 
+- (void)layoutSubviews {
 	mailComposeViewIsOpen = YES;
 	%orig();
 }
@@ -42,11 +48,11 @@ static BOOL mailComposeViewIsOpen = NO;
 %hook UIPickerView
 
 -(void)setBackgroundColor:(UIColor *)color {
-    if (enabled && mailComposeViewIsOpen) {
-        %orig([UIColor colorWithWhite:40.0/255 alpha:0.7]);
-    } else {
-        %orig(color);
-    }
+	if (enabled && mailComposeViewIsOpen) {
+		%orig([UIColor colorWithWhite:40.0/255 alpha:0.7]);
+	} else {
+		%orig(color);
+	}
 }
 
 %end
@@ -63,8 +69,7 @@ static BOOL mailComposeViewIsOpen = NO;
 - (void)setAttributedTitle:(NSAttributedString *)attributedString {
 	if (enabled) {
 		// white UIPickerView text
-		NSDictionary *attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:attributes];
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
 		[title release];
 	} else {
@@ -91,8 +96,8 @@ static BOOL mailComposeViewIsOpen = NO;
 %hook DevicePINKeypad
 
 - (id)initWithFrame:(CGRect)frame {
-    id keypad = %orig(frame);
-    if (enabled) {
+	id keypad = %orig(frame);
+	if (enabled) {
 		[keypad setBackgroundColor:[UIColor colorWithWhite:40.0/255 alpha:0.7]];
 	}
 	return keypad;
@@ -101,7 +106,7 @@ static BOOL mailComposeViewIsOpen = NO;
 %end
 
 #if 0
-@interface UIWebFormAccessory : UIInputView 
+@interface UIWebFormAccessory : UIInputView
 @end
 #endif
 
@@ -120,9 +125,8 @@ static BOOL mailComposeViewIsOpen = NO;
 // White Done button
 - (void)layoutSubviews {
 	if (enabled) {
-		NSDictionary *attributes = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
 		//what is going on here? Why is this using a class method?
-		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0]; //can we get an enum for the state?
+		[[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:0]; //can we get an enum for the state?
 	}
 	%orig();
 }
