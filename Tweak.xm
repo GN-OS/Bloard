@@ -1,18 +1,95 @@
-#import "substrate.h"
-#import "preferences.h"
+#include <CoreFoundation/CFNotificationCenter.h>
+#import <Foundation/NSUserDefaults.h>
+#import <Foundation/NSString.h>
 
-unsigned long long deepness = 0;
+@interface NSUserDefaults (UFS_Category)
+- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
+- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
+@end
 
-#define logStart0() do { NSLog(@"uroboro %d; %s {", deepness, __PRETTY_FUNCTION__); deepness++; } while (0)
-#define logStart() do { NSLog(@"uroboro %lld; class: %@; method: %@; {", deepness, NSStringFromClass([self class]), NSStringFromSelector(_cmd)); deepness++; } while (0)
-#define logEnd() do { deepness--; NSLog(@"uroboro; }%s", deepness?"":" //so deep"); } while (0)
+static NSString *domainString = @"com.gnos.bloard";
+static NSString *notificationString = @"com.gnos.bloard/preferences.changed";
+static BOOL enabled;
+
+<<<<<<< HEAD
+// Dark keyboard background
+%hook UIKBRenderConfig
+=======
+static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
+	NSNumber *n = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"enabled" inDomain:domainString];
+	enabled = (n)? [n boolValue]:YES;
+}
+
+%ctor {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//set initial `enable' variable
+	notificationCallback(NULL, NULL, NULL, NULL, NULL);
+>>>>>>> debug
+
+	//register for notifications
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
+	[pool release];
+}
+
+// We need to monitor when the Mail compose view is open so we can disable white UIPickerView text
+// The UIPickerView it shows for `From: email' selection has a white background, and white text on white background is not pleasant :p
+static BOOL mailComposeViewIsOpen = NO;
+
+%hook MFMailComposeView
+
+- (void)layoutSubviews {
+	mailComposeViewIsOpen = YES;
+	%orig();
+}
+
+- (void)willDisappear {
+	mailComposeViewIsOpen = NO;
+	%orig();
+}
+
+%end
+
+// Black background in mail compose pickerView
+%hook UIPickerView
+
+-(void)setBackgroundColor:(UIColor *)color {
+	if (enabled && mailComposeViewIsOpen) {
+		%orig([UIColor colorWithWhite:40.0/255 alpha:0.7]);
+	} else {
+		%orig(color);
+	}
+}
+
+%end
+
+// White UIPickerView text entries
+#if 0
+@interface UIPickerTableViewTitledCell : UITableViewCell
+-(void)setAttributedTitle:(NSAttributedString *)attributedString;
+@end
+#endif
+
+%hook UIPickerTableViewTitledCell
+
+- (void)setAttributedTitle:(NSAttributedString *)attributedString {
+	if (enabled) {
+		// white UIPickerView text
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+		%orig(title);
+		[title release];
+	} else {
+		%orig(attributedString);
+	}
+}
+
+%end
 
 // Dark keyboard background
 %hook UIKBRenderConfig
 
 - (BOOL)lightKeyboard {
 	BOOL light = %orig();
-	if (tweakIsEnabled()) {
+	if (enabled) {
 		light = NO;
 	}
 	return light;
@@ -23,59 +100,44 @@ unsigned long long deepness = 0;
 // Dark PIN keypad in Settings
 %hook DevicePINKeypad
 
--(id)initWithFrame:(CGRect)arg1 {
-    id keypad = %orig;
-    if (tweakIsEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithWhite:40/255.0 alpha:0.7]];
+- (id)initWithFrame:(CGRect)frame {
+	id keypad = %orig(frame);
+	if (enabled) {
+		[keypad setBackgroundColor:[UIColor colorWithWhite:40.0/255 alpha:0.7]];
 	}
 	return keypad;
 }
 
 %end
 
-// White UIPickerView text entries
-@interface UIPickerTableViewTitledCell : UITableViewCell
--(void)setAttributedTitle:(NSAttributedString *)arg1;
+#if 0
+@interface UIWebFormAccessory : UIInputView
 @end
-
-%hook UIPickerTableViewTitledCell
-
--(void)setAttributedTitle:(NSAttributedString *)arg1 {
-	if (tweakIsEnabled()) {
-		// white UIPickerView text
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[arg1 string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-		%orig(title);
-	}
-	else {
-		%orig(arg1);
-	}
-}
-
-%end
+#endif
 
 %hook UIWebFormAccessory
 
 // White chevrons
-+(id)toolbarWithItems:(NSArray *)items {
-	if (tweakIsEnabled()) {
++ (id)toolbarWithItems:(NSArray *)items {
+	if (enabled) {
 		for (UIBarButtonItem *item in items) {
-			[item setTintColor: [UIColor whiteColor]];
+			[item setTintColor:[UIColor whiteColor]];
 		}
 	}
 	return %orig(items);
 }
 
 // White Done button
--(void)layoutSubviews {
-	if (tweakIsEnabled()) {
-		NSDictionary *attributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-		[[UIBarButtonItem appearance] setTitleTextAttributes:attributes forState:0]; 
+- (void)layoutSubviews {
+	if (enabled) {
+		//what is going on here? Why is this using a class method?
+		[[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:0]; //can we get an enum for the state?
 	}
-	%orig;
-
+	%orig();
 }
 
 %end
+<<<<<<< HEAD
 
 // dark PIN keypad in Settings
 %hook DevicePINKeypad
@@ -97,3 +159,5 @@ unsigned long long deepness = 0;
 	addObserver(preferencesChangedCallback, preferencesChangedNotification);
 	[pool release];
 }
+=======
+>>>>>>> debug
