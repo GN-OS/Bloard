@@ -11,10 +11,6 @@ static NSString *domainString = @"com.gnos.bloard";
 static NSString *notificationString = @"com.gnos.bloard/preferences.changed";
 static BOOL enabled;
 
-<<<<<<< HEAD
-// Dark keyboard background
-%hook UIKBRenderConfig
-=======
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
 	NSNumber *n = (NSNumber *)[[NSUserDefaults standardUserDefaults] objectForKey:@"enabled" inDomain:domainString];
 	enabled = (n)? [n boolValue]:YES;
@@ -24,7 +20,6 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	//set initial `enable' variable
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
->>>>>>> debug
 
 	//register for notifications
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, notificationCallback, (CFStringRef)notificationString, NULL, CFNotificationSuspensionBehaviorCoalesce);
@@ -56,7 +51,7 @@ static BOOL mailComposeViewIsOpen = NO;
 	if (enabled && mailComposeViewIsOpen) {
 		%orig([UIColor colorWithWhite:40.0/255 alpha:0.7]);
 	} else {
-		%orig(color);
+		%orig();
 	}
 }
 
@@ -78,7 +73,7 @@ static BOOL mailComposeViewIsOpen = NO;
 		%orig(title);
 		[title release];
 	} else {
-		%orig(attributedString);
+		%orig();
 	}
 }
 
@@ -101,7 +96,7 @@ static BOOL mailComposeViewIsOpen = NO;
 %hook DevicePINKeypad
 
 - (id)initWithFrame:(CGRect)frame {
-	id keypad = %orig(frame);
+	id keypad = %orig();
 	if (enabled) {
 		[keypad setBackgroundColor:[UIColor colorWithWhite:40.0/255 alpha:0.7]];
 	}
@@ -124,7 +119,7 @@ static BOOL mailComposeViewIsOpen = NO;
 			[item setTintColor:[UIColor whiteColor]];
 		}
 	}
-	return %orig(items);
+	return %orig();
 }
 
 // White Done button
@@ -137,27 +132,3 @@ static BOOL mailComposeViewIsOpen = NO;
 }
 
 %end
-<<<<<<< HEAD
-
-// dark PIN keypad in Settings
-%hook DevicePINKeypad
-
--(id)initWithFrame:(CGRect)arg1 {
-    id keypad = %orig;
-    if (isEnabled()) {
-		[self setBackgroundColor:[UIColor colorWithRed:40.0/255.0f green:40.0/255.0f blue:40.0/255.0f alpha:1.0f]];
-	}    	
-	return keypad;
-}
-
-%end
-
-%ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	preferencesChanged();  // Not really
-	// Register to receive changed notifications
-	addObserver(preferencesChangedCallback, preferencesChangedNotification);
-	[pool release];
-}
-=======
->>>>>>> debug
