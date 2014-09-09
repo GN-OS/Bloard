@@ -8,7 +8,7 @@
 @end
 
 static NSString *domainString = @"com.gnos.bloard";
-static NSString *notificationString = @"com.gnos.bloard/preferences.changed";
+static NSString *notificationString = @"com.gnos.bloard.preferences.changed";//this was com.gnos.bloard/preferences.changed
 static BOOL enabled;
 
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
