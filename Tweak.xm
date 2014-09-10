@@ -8,7 +8,7 @@
 @end
 
 static NSString *domainString = @"com.gnos.bloard";
-static NSString *notificationString = @"com.gnos.bloard.preferences.changed";//this was com.gnos.bloard/preferences.changed
+static NSString *notificationString = @"com.gnos.bloard/preferences.changed";
 static BOOL enabled;
 
 static void notificationCallback(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo) {
@@ -17,7 +17,7 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 }
 
 %ctor {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool *pool = [NSAutoreleasePool new];
 	//set initial `enable' variable
 	notificationCallback(NULL, NULL, NULL, NULL, NULL);
 
@@ -58,11 +58,6 @@ static BOOL mailComposeViewIsOpen = NO;
 %end
 
 // White UIPickerView text entries
-#if 0
-@interface UIPickerTableViewTitledCell : UITableViewCell
--(void)setAttributedTitle:(NSAttributedString *)attributedString;
-@end
-#endif
 
 %hook UIPickerTableViewTitledCell
 
@@ -105,11 +100,6 @@ static BOOL mailComposeViewIsOpen = NO;
 
 %end
 
-#if 0
-@interface UIWebFormAccessory : UIInputView
-@end
-#endif
-
 %hook UIWebFormAccessory
 
 // White chevrons
@@ -125,8 +115,7 @@ static BOOL mailComposeViewIsOpen = NO;
 // White Done button
 - (void)layoutSubviews {
 	if (enabled) {
-		//what is going on here? Why is this using a class method?
-		[[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:0]; //can we get an enum for the state?
+		[[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:0];
 	}
 	%orig();
 }

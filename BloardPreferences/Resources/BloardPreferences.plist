@@ -14,7 +14,7 @@
 		</dict>
 		<dict>
 			<key>PostNotification</key>
-			<string>com.gnos.bloard.preferences.changed</string>
+			<string>com.gnos.bloard/preferences.changed</string>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
