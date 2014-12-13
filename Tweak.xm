@@ -67,6 +67,7 @@ static BOOL mailComposeViewIsOpen = NO;
 		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
 		[title release];
+        
 	} else {
 		%orig();
 	}
@@ -96,28 +97,6 @@ static BOOL mailComposeViewIsOpen = NO;
 		[keypad setBackgroundColor:[UIColor colorWithWhite:40.0/255 alpha:0.7]];
 	}
 	return keypad;
-}
-
-%end
-
-%hook UIWebFormAccessory
-
-// White chevrons
-+ (id)toolbarWithItems:(NSArray *)items {
-	if (enabled) {
-		for (UIBarButtonItem *item in items) {
-			[item setTintColor:[UIColor whiteColor]];
-		}
-	}
-	return %orig();
-}
-
-// White Done button
-- (void)layoutSubviews {
-	if (enabled) {
-		[[UIBarButtonItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]} forState:0];
-	}
-	%orig();
 }
 
 %end
