@@ -26,18 +26,31 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	[pool release];
 }
 
-// We need to monitor when the Mail compose view is open so we can disable white UIPickerView text
-// The UIPickerView it shows for `From: email' selection has a white background, and white text on white background is not pleasant :p
-
-// Black background in mail compose pickerView
+// Black background in pickerView
 %hook UIPickerView
 
 -(void)setBackgroundColor:(UIColor *)color {
 	if (enabled) {
-		%orig([UIColor colorWithWhite:40.0/255 alpha:0.7]);
-	} else {
-		%orig();
+		color = [UIColor colorWithWhite:40.0/255 alpha:0.7];
 	}
+    %orig(color);
+}
+
+%end
+
+%hook UIDatePickerContentView
+
+// White text in date picker
+-(UILabel *)titleLabel {
+    if (enabled) {
+        // white UIPickerView text
+        UILabel *titleLabel = %orig();
+        titleLabel.textColor = [UIColor whiteColor];
+        return titleLabel;
+
+    } else {
+        return %orig();
+    }
 }
 
 %end
