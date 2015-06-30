@@ -26,6 +26,9 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 	[pool release];
 }
 
+/*
+As of 0.1.2 this section has been disabled.
+
 // Black background in pickerView
 %hook UIPickerView
 
@@ -65,13 +68,14 @@ static void notificationCallback(CFNotificationCenterRef center, void *observer,
 		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[attributedString string] attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 		%orig(title);
 		[title release];
-        
+
 	} else {
 		%orig();
 	}
 }
 
 %end
+*/
 
 // Dark keyboard background
 %hook UIKBRenderConfig
