@@ -1,4 +1,5 @@
 Bloard
 ======
 
-Universal black keyboard for iOS 7 & 8. Enable/disable in settings.
+Universal black keyboard for iOS 7,8, 9 & 10. 
+Enable/disable in settings.
