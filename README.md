@@ -4,6 +4,8 @@ Bloard
 Universal black keyboard for iOS 7,8, 9 & 10. 
 Enable/disable in settings.
 
+(c) GN-OS 2013-2017
+
 Licensing (modified zlib)
 =========
 This software is provided 'as-is', without any express or implied
