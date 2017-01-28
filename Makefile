@@ -8,6 +8,7 @@ SUBPROJECTS += BloardPreferences
 SUBPROJECTS += BloardFlipswitch
 
 include $(THEOS)/makefiles/tweak.mk
+include $(THEOS)/makefiles/aggregate.mk
 
 after-install::
 	install.exec "killall -9 SpringBoard"
