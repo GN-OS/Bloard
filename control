@@ -3,7 +3,7 @@ Name: Bloard
 Depends: mobilesubstrate, preferenceloader, firmware(>=7.0)
 Version: 0.1.2
 Architecture: iphoneos-arm
-Description: Universal dark keyboard for iOS 7 & 8. Enable/disable in settings.
-Maintainer: Nexuist <nexuister@gmail.com>
+Description: Universal dark keyboard for iOS 7 to 10. Enable/disable in settings.
+Maintainer: Ge0rges <ge0rges@ ge0rges.com>
 Author: GN-OS
 Section: Tweaks

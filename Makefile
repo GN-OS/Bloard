@@ -7,7 +7,7 @@ Bloard_FILES = Tweak.xm
 SUBPROJECTS += BloardPreferences
 SUBPROJECTS += BloardFlipswitch
 
-include $(THEOS)/tweak.mk
+include $(THEOS)/makefiles/tweak.mk
 
 after-install::
 	install.exec "killall -9 SpringBoard"
